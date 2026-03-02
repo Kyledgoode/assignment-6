@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-const { create } = require('domain');
 const path = require('path');
 
 const dbPath = path.resolve(__dirname, 'database.sqlite');
@@ -17,7 +16,7 @@ const createUniversityTable = `
         title TEXT NOT NULL,
         credits INTEGER NOT NULL,
         description TEXT NOT NULL,
-        semester TEXT NOT NULL,
+        semester TEXT NOT NULL
     );
 `;
 
