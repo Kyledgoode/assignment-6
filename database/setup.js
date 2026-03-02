@@ -9,8 +9,9 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-const createUniversityTable = `
-    CREATE TABLE IF NOT EXISTS university (
+const createCoursesTable = `
+    DROP TABLE IF EXISTS courses;
+    CREATE TABLE IF NOT EXISTS courses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         courseCode TEXT NOT NULL,
         title TEXT NOT NULL,
@@ -20,14 +21,14 @@ const createUniversityTable = `
     );
 `;
 
-db.run(createUniversityTable, (err) => {
+db.run(createCoursesTable, (err) => {
     if (err) {
-        console.error('Could not create university table:', err.message);
+        console.error('Could not create courses table:', err.message);
         db.close();
         process.exit(1);
     }
 
-    console.log('University table created successfully.');
+    console.log('Courses table created successfully.');
 
     db.close((closeErr) => {
         if (closeErr) console.error('Error closing the database:', closeErr.message);

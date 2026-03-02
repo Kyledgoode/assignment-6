@@ -9,13 +9,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-const clearSQL = `DELETE FROM university;`;
+const clearSQL = `DELETE FROM courses;`;
 const insertSQL = `
-    INSERT INTO university (courseCode, title, credits, description, semester) 
+    INSERT INTO courses (courseCode, title, credits, description, semester) 
     VALUES (?, ?, ?, ?, ?);
 `;
 
-const courses =  [
+const coursesIncluded =  [
     ["CS101", "Intro Programming", 3, "Learn Python basics", "Fall 2024"],
   ["BIO120", "General Biology", 3, "Introduction to biological principles", "Fall 2024"],
   ["MATH150", "Calculus I", 4, "Basic calculus", "Fall 2024"],
@@ -29,14 +29,14 @@ const courses =  [
 db.serialize(() => {
     db.run(clearSQL, (err) => {
         if (err) { 
-            console.error('Error clearing university table:', err.message);
+            console.error('Error clearing courses table:', err.message);
             db.close();
             process.exit(1);
         }
 
         const stmt = db.prepare(insertSQL);
 
-        for (const c of courses) {
+        for (const c of coursesIncluded) {
             stmt.run(c, (insertErr) => {
                 if (insertErr) {
                     console.error('Error inserting course:', insertErr.message);

@@ -36,32 +36,32 @@ function validateCourseBody(body) {
   return null;
 }
 
-app.get("/api/university", (req, res) => {
-  db.all("SELECT * FROM university;", [], (err, rows) => {
+app.get("/api/courses", (req, res) => {
+  db.all("SELECT * FROM courses;", [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     return res.status(200).json(rows);
   });
 });
 
-app.get("/api/university/:id", (req, res) => {
+app.get("/api/courses/:id", (req, res) => {
   const id = parseId(req.params.id);
   if (id === null) return res.status(400).json({ error: "Invalid id" });
 
-  db.get("SELECT * FROM university WHERE id = ?;", [id], (err, row) => {
+  db.get("SELECT * FROM courses WHERE id = ?;", [id], (err, row) => {
     if (err) return res.status(500).json({ error: err.message });
     if (!row) return res.status(404).json({ error: "Course not found" });
     return res.status(200).json(row);
   });
 });
 
-app.post("/api/university", (req, res) => {
+app.post("/api/courses", (req, res) => {
   const validationError = validateCourseBody(req.body);
   if (validationError) return res.status(400).json({ error: validationError });
 
   const { courseCode, title, credits, description, semester } = req.body;
 
   const sql = `
-    INSERT INTO university (courseCode, title, credits, description, semester)
+    INSERT INTO courses (courseCode, title, credits, description, semester)
     VALUES (?, ?, ?, ?, ?);
   `;
 
@@ -83,7 +83,7 @@ app.post("/api/university", (req, res) => {
   );
 });
 
-app.put("/api/university/:id", (req, res) => {
+app.put("/api/courses/:id", (req, res) => {
   const id = parseId(req.params.id);
   if (id === null) return res.status(400).json({ error: "Invalid id" });
 
@@ -93,7 +93,7 @@ app.put("/api/university/:id", (req, res) => {
   const { courseCode, title, credits, description, semester } = req.body;
 
   const sql = `
-    UPDATE university
+    UPDATE courses
     SET courseCode = ?, title = ?, credits = ?, description = ?, semester = ?
     WHERE id = ?;
   `;
@@ -117,11 +117,11 @@ app.put("/api/university/:id", (req, res) => {
   );
 });
 
-app.delete("/api/university/:id", (req, res) => {
+app.delete("/api/courses/:id", (req, res) => {
   const id = parseId(req.params.id);
   if (id === null) return res.status(400).json({ error: "Invalid id" });
 
-  db.run("DELETE FROM university WHERE id = ?;", [id], function (err) {
+  db.run("DELETE FROM courses WHERE id = ?;", [id], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     if (this.changes === 0) return res.status(404).json({ error: "Course not found" });
     return res.status(204).send();
